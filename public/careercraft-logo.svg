@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 60" fill="none">
+  <defs>
+    <linearGradient id="mainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="50%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+    <linearGradient id="nibGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Stylized C with pen nib -->
+  <g transform="translate(4, 4)">
+    <!-- Main C shape -->
+    <path d="M38 6 C24 6 14 14 14 26 C14 38 24 46 38 46 L38 42 C27 42 19 36 19 26 C19 16 27 10 38 10 Z"
+          fill="url(#mainGrad)"/>
+
+    <!-- Pen nib extension from C opening -->
+    <path d="M38 10 L44 2 L38 10 Z" fill="url(#nibGrad)" opacity="0.9"/>
+    <path d="M44 2 L46 6 L42 8 Z" fill="url(#nibGrad)"/>
+    <path d="M38 42 L44 50 L38 46 Z" fill="url(#nibGrad)" opacity="0.7"/>
+
+    <!-- Pen nib detail lines -->
+    <line x1="40" y1="4" x2="42" y2="8" stroke="#fff" stroke-width="0.5" opacity="0.4"/>
+    <line x1="40" y1="48" x2="42" y2="44" stroke="#fff" stroke-width="0.5" opacity="0.3"/>
+
+    <!-- Sparkle/star at top right -->
+    <g transform="translate(46, 0)" filter="url(#glow)">
+      <path d="M4 0 L5 3 L8 4 L5 5 L4 8 L3 5 L0 4 L3 3 Z" fill="#FBBF24"/>
+      <circle cx="4" cy="4" r="1" fill="#fff"/>
+    </g>
+
+    <!-- Small sparkle accent -->
+    <circle cx="52" cy="10" r="1.2" fill="#EC4899" opacity="0.6"/>
+    <circle cx="48" cy="-2" r="0.8" fill="#3B82F6" opacity="0.5"/>
+  </g>
+
+  <!-- CareerCraft wordmark -->
+  <text x="62" y="37" font-family="'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif" font-size="30" font-weight="800" fill="url(#mainGrad)">
+    CareerCraft
+  </text>
+</svg>
