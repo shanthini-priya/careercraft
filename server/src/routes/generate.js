@@ -142,7 +142,7 @@ router.post("/resume", async (req, res, next) => {
 
 router.post("/linkedin", async (req, res, next) => {
   try {
-    const { user, profile } = await buildProfileContext(req.user.id);
+    const { profile } = await buildProfileContext(req.user.id);
 
     if (!profile) {
       return res.status(400).json({
@@ -205,7 +205,7 @@ ${profile.projects.length > 0 ? `\n🔨 Featured Projects:\n${profile.projects.f
       ],
     };
 
-    const saved = await prisma.linkedinContent.create({
+    const saved = await prisma.linkedInContent.create({
       data: {
         userId: req.user.id,
         headline: linkedin.headline,
@@ -351,7 +351,7 @@ router.post(
   async (req, res, next) => {
     try {
       const { companyName, jobTitle, jobDescription } = req.body;
-      const { user, profile } = await buildProfileContext(req.user.id);
+    const { user, profile } = await buildProfileContext(req.user.id);
 
       if (!profile) {
         return res.status(400).json({
@@ -422,5 +422,90 @@ ${profile.phone ? ` | ${profile.phone}` : ""}${profile.location ? ` | ${profile.
     }
   }
 );
+
+router.get("/documents", async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    const [resumes, linkedins, readmes, coverLetters] = await Promise.all([
+      prisma.resume.findMany({ where: { userId }, orderBy: { updatedAt: "desc" } }),
+      prisma.linkedInContent.findMany({ where: { userId }, orderBy: { updatedAt: "desc" } }),
+      prisma.githubReadme.findMany({ where: { userId }, orderBy: { updatedAt: "desc" } }),
+      prisma.coverLetter.findMany({ where: { userId }, orderBy: { updatedAt: "desc" } }),
+    ]);
+
+    const documents = [
+      ...resumes.map((d) => ({
+        id: d.id,
+        type: "Resume",
+        name: d.title || "My Resume",
+        updatedAt: d.updatedAt,
+        atsScore: d.atsScore,
+        content: d.content,
+      })),
+      ...linkedins.map((d) => ({
+        id: d.id,
+        type: "LinkedIn",
+        name: "LinkedIn Profile",
+        updatedAt: d.updatedAt,
+        content: d,
+      })),
+      ...readmes.map((d) => ({
+        id: d.id,
+        type: "GitHub",
+        name: "GitHub README",
+        updatedAt: d.updatedAt,
+        content: d,
+      })),
+      ...coverLetters.map((d) => ({
+        id: d.id,
+        type: "Cover Letter",
+        name: `${d.jobTitle} — ${d.companyName}`,
+        updatedAt: d.updatedAt,
+        content: { content: d.content, companyName: d.companyName, jobTitle: d.jobTitle },
+      })),
+    ].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+    res.json({
+      documents,
+      counts: {
+        resumes: resumes.length,
+        linkedin: linkedins.length,
+        github: readmes.length,
+        coverLetters: coverLetters.length,
+        total: documents.length,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/counts", async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const [resumes, linkedins, readmes, coverLetters, portfolio, scoreObj] = await Promise.all([
+      prisma.resume.count({ where: { userId } }),
+      prisma.linkedInContent.count({ where: { userId } }),
+      prisma.githubReadme.count({ where: { userId } }),
+      prisma.coverLetter.count({ where: { userId } }),
+      prisma.portfolio.findFirst({ where: { userId } }),
+      prisma.scoreHistory.findFirst({ where: { userId }, orderBy: { createdAt: "desc" } }),
+    ]);
+
+    res.json({
+      counts: {
+        documents: resumes + linkedins + readmes + coverLetters,
+        careerMatches: scoreObj?.breakdown?.keywordOptimization
+          ? Math.max(1, Math.round(scoreObj.breakdown.keywordOptimization / 20))
+          : 0,
+        recruiterReadiness: scoreObj?.breakdown?.recruiterReadiness ?? null,
+        hasPortfolio: !!portfolio,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default router;

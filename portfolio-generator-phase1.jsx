@@ -79,7 +79,7 @@ function Card({ children, style = {} }) {
 }
 
 // ─── Score Ring ──────────────────────────────────────────────────────────────
-function ScoreRing({ score, size = 80, color = C.indigo[600], label }) {
+function ScoreRing({ score, size = 80, color = C.indigo[600], _label }) {
   const r = (size / 2) - 8;
   const circ = 2 * Math.PI * r;
   const dash = (score / 100) * circ;
@@ -96,27 +96,8 @@ function ScoreRing({ score, size = 80, color = C.indigo[600], label }) {
   );
 }
 
-// ─── Utility: Count-up hook ──────────────────────────────────────────────────
-function useCountUp(target, seconds = 1.2) {
-  const [val, setVal] = useState(0);
-  useEffect(() => {
-    let raf;
-    const start = performance.now();
-    const tick = (now) => {
-      const p = Math.min((now - start) / (seconds * 1000), 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setVal(Math.round(target * eased));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target, seconds]);
-  return val;
-}
-
 // ─── Navbar ──────────────────────────────────────────────────────────────────
 function Navbar({ nav, route }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const links = [
     ["#home", "Home"], ["#features", "Features"],
     ["#how", "How It Works"], ["#templates", "Templates"],
@@ -212,7 +193,7 @@ function HeroSection({ nav }) {
               </div>
 
               <div style={{ background: "#1B2440", borderRadius: 12, padding: "12px 16px", marginBottom: 12 }}>
-                <p style={{ margin: 0, fontSize: 14, color: C.textBody, lineHeight: 1.6 }}>Tell me about yourself — I'll build your complete professional identity.</p>
+                <p style={{ margin: 0, fontSize: 14, color: C.textBody, lineHeight: 1.6 }}>Tell me about yourself — I&apos;ll build your complete professional identity.</p>
               </div>
 
               <div style={{ background: `linear-gradient(135deg, ${C.indigo[50]}, ${C.violet[50]})`, borderRadius: 12, padding: "12px 16px", marginBottom: 12, marginLeft: 24 }}>
@@ -224,8 +205,8 @@ function HeroSection({ nav }) {
               {typed.length > 50 && (
                 <div style={{ background: "#1B2440", borderRadius: 12, padding: "12px 16px" }}>
                   <p style={{ margin: 0, fontSize: 14, color: C.textBody }}>
-                    Great! I can see you're a CSE student with frontend + backend skills.
-                    What's the biggest problem your library system solves? 🎯
+                    Great! I can see you&apos;re a CSE student with frontend + backend skills.
+                    What&apos;s the biggest problem your library system solves? 🎯
                   </p>
                 </div>
               )}
@@ -531,8 +512,8 @@ function Testimonials() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
           {testi.map(t => (
             <Card key={t.name} style={{ position: "relative" }}>
-              <div style={{ fontSize: 36, color: C.indigo[100], fontFamily: "Georgia", position: "absolute", top: 16, right: 20, lineHeight: 1 }}>"</div>
-              <p style={{ fontSize: 14, color: C.textBody, lineHeight: 1.7, marginBottom: 20 }}>"{t.quote}"</p>
+              <div style={{ fontSize: 36, color: C.indigo[100], fontFamily: "Georgia", position: "absolute", top: 16, right: 20, lineHeight: 1 }}>&quot;</div>
+              <p style={{ fontSize: 14, color: C.textBody, lineHeight: 1.7, marginBottom: 20 }}>&quot;{t.quote}&quot;</p>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <div style={{ width: 38, height: 38, borderRadius: "50%", background: `linear-gradient(135deg, ${C.indigo[400]}, ${C.violet[400]})`, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 13 }}>{t.avatar}</div>
                 <div>
@@ -612,7 +593,7 @@ async function needsOnboarding(userId) {
   // Returning user with a completed onboarding -> dashboard.
   try {
     if (userId && localStorage.getItem(`${ONBOARD_FLAG}_${userId}`) === "done") return false;
-  } catch (_) {}
+  } catch (_) { /* ignore storage access failures */ }
   // No signal yet -> treat as new (send to onboarding).
   return true;
 }
@@ -620,7 +601,7 @@ async function needsOnboarding(userId) {
 async function markOnboarded(userId) {
   try {
     if (userId) localStorage.setItem(`${ONBOARD_FLAG}_${userId}`, "done");
-  } catch (_) {}
+  } catch (_) { /* ignore storage access failures */ }
 }
 
 function AuthShell({ children }) {
@@ -732,12 +713,12 @@ function LoginPage({ nav }) {
       <Card style={{ padding: 32 }}>
         {error && <Alert kind="error">{error}</Alert>}
         {info && <Alert kind="success">{info}</Alert>}
-        {resetSent && <Alert kind="success">If an account exists, we've emailed a password reset link. Check your inbox.</Alert>}
+        {resetSent && <Alert kind="success">If an account exists, we&apos;ve emailed a password reset link. Check your inbox.</Alert>}
 
         {forgot ? (
           <>
             <h2 style={{ fontWeight: 800, fontSize: 20, color: C.text, margin: 0, marginBottom: 6 }}>Reset your password</h2>
-            <p style={{ color: C.textMuted, fontSize: 13, marginBottom: 18 }}>Enter your email and we'll send you a reset link.</p>
+            <p style={{ color: C.textMuted, fontSize: 13, marginBottom: 18 }}>Enter your email and we&apos;ll send you a reset link.</p>
             <AuthField label="Email" type="email" value={form.email} onChange={set("email")} placeholder="you@example.com" autoComplete="email"/>
             <button onClick={handleReset} style={{ width: "100%", padding: "13px", borderRadius: 10, background: `linear-gradient(135deg, ${C.indigo[600]}, ${C.violet[600]}, ${C.violet[400]})`, color: "#fff", fontWeight: 700, fontSize: 15, border: "none", cursor: "pointer" }}>
               Send reset link
@@ -764,7 +745,7 @@ function LoginPage({ nav }) {
               {loading ? "Signing in…" : "Sign In"}
             </button>
             <div style={{ textAlign: "center", marginTop: 18, fontSize: 14, color: C.textMuted }}>
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <span onClick={() => nav("#register")} style={{ color: C.indigo[400], fontWeight: 600, cursor: "pointer" }}>Create Account</span>
             </div>
           </>
@@ -918,7 +899,7 @@ function OnboardingPage({ nav }) {
       const { authApi } = await import("./src/api/auth");
       const user = await authApi.me().catch(() => null);
       markOnboarded(user?.user?.id || user?.id);
-    } catch (_) {}
+    } catch (_) { /* ignore */ }
     nav("#dashboard");
   };
 
@@ -967,7 +948,7 @@ function OnboardingPage({ nav }) {
             )}
             {done && saved === false && (
               <div style={{ padding: "14px 16px", borderRadius: 12, border: `1px solid ${C.indigo[600]}55`, background: `${C.indigo[600]}14`, color: C.textBody, fontSize: 14, lineHeight: 1.6 }}>
-                ✅ I've captured your profile from our chat — skills, projects and education are saved. Ready when you are!
+                ✅ I&apos;ve captured your profile from our chat — skills, projects and education are saved. Ready when you are!
               </div>
             )}
             {done && saved && (
@@ -1017,26 +998,6 @@ const ROUTE_TITLES = {
   "#templates": "Templates", "#profile-form": "My Profile", "#settings": "Settings",
   "#documents": "Documents", "#career-match": "Career Match", "#feedback": "Feedback",
 };
-
-// ─── Sparkline (header small chart) ──────────────────────────────────────────
-function Sparkline({ data, color, width = 100, height = 30 }) {
-  const max = Math.max(...data);
-  const min = Math.min(...data);
-  const pts = data.map((v, i) => {
-    const x = (i / (data.length - 1)) * width;
-    const y = height - ((v - min) / (max - min || 1)) * (height - 4) - 2;
-    return [x, y];
-  });
-  const path = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
-  return (
-    <svg width={width} height={height} style={{ display: "block" }}>
-      <path d={path} fill="none" stroke={color} strokeWidth={2} strokeLinecap="round"/>
-      {pts.map((p, i) => (
-        <circle key={i} cx={p[0]} cy={p[1]} r={2.2} fill={color}/>
-      ))}
-    </svg>
-  );
-}
 
 // ─── Enhanced Sidebar (collapsible) ──────────────────────────────────────────
 function EnhancedSidebar({ nav, route, collapsed, onToggle }) {
@@ -1176,194 +1137,6 @@ function TopHeader({ route, nav }) {
   );
 }
 
-// ─── SVG Line Chart ──────────────────────────────────────────────────────────
-function ScoreTrendChart() {
-  const data = [72, 74, 75, 78, 79, 81, 82];
-  const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const W = 720, H = 200, P = 34;
-  const max = 100, min = 60;
-  const innerW = W - P * 2, innerH = H - P * 2;
-  const x = i => P + (i / (data.length - 1)) * innerW;
-  const y = v => P + innerH - ((v - min) / (max - min)) * innerH;
-  const pts = data.map((v, i) => [x(i), y(v)]);
-  const line = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
-  const [first, ...rest] = pts;
-  const smooth = `M${first[0].toFixed(1)},${first[1].toFixed(1)} ` + rest.map((p, i) => {
-    const prev = pts[i];
-    const cx = (prev[0] + p[0]) / 2;
-    return `C${cx},${prev[1].toFixed(1)} ${cx},${p[1].toFixed(1)} ${p[0].toFixed(1)},${p[1].toFixed(1)}`;
-  }).join(" ");
-  const area = `${smooth} L${x(data.length - 1).toFixed(1)},${P + innerH} L${P},${P + innerH} Z`;
-  const gridY = [60, 70, 80, 90, 100];
-  return (
-    <Card>
-      <h3 style={{ fontWeight: 700, fontSize: 16, color: C.text, marginBottom: 14 }}>Portfolio Score Trend</h3>
-      <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: "block" }}>
-        <defs>
-          <linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={C.indigo[400]} stopOpacity="0.35"/>
-            <stop offset="100%" stopColor={C.indigo[400]} stopOpacity="0"/>
-          </linearGradient>
-        </defs>
-        {gridY.map(g => (
-          <g key={g}>
-            <line x1={P} y1={y(g)} x2={W - P} y2={y(g)} stroke={C.border} strokeWidth={1}/>
-            <text x={P - 6} y={y(g) + 3} textAnchor="end" fontSize={10} fill={C.textMuted}>{g}</text>
-          </g>
-        ))}
-        {data.map((v, i) => (
-          <text key={i} x={x(i)} y={H - 10} textAnchor="middle" fontSize={11} fill={C.textMuted}>{labels[i]}</text>
-        ))}
-        <path d={area} fill="url(#lineFill)"/>
-        <path d={smooth} fill="none" stroke={C.indigo[600]} strokeWidth={2.5} strokeLinecap="round"/>
-        {pts.map((p, i) => (
-          <g key={i}>
-            <circle cx={p[0]} cy={p[1]} r={4.5} fill={C.surface} stroke={C.indigo[600]} strokeWidth={2}/>
-          </g>
-        ))}
-      </svg>
-    </Card>
-  );
-}
-
-// ─── SVG Bar Chart ───────────────────────────────────────────────────────────
-function AssetBarChart() {
-  const bars = [
-    { label: "Portfolio", value: 1, color: C.indigo[400] },
-    { label: "Resume", value: 3, color: C.violet[400] },
-    { label: "LinkedIn", value: 2, color: C.cyan[400] },
-    { label: "GitHub", value: 1, color: C.amber[400] },
-    { label: "Cover Ltr", value: 2, color: C.coral[400] },
-    { label: "Score", value: 5, color: C.indigo[600] },
-  ];
-  const [heights, setHeights] = useState(bars.map(() => 0));
-  useEffect(() => {
-    const t = setTimeout(() => setHeights(bars.map(b => b.value)), 60);
-    return () => clearTimeout(t);
-  }, []);
-  const max = Math.max(...bars.map(b => b.value));
-  return (
-    <Card>
-      <h3 style={{ fontWeight: 700, fontSize: 16, color: C.text, marginBottom: 14 }}>Assets Generated</h3>
-      <div style={{ display: "flex", alignItems: "flex-end", height: 180, gap: 24 }}>
-        {bars.map((b, i) => {
-          const h = (heights[i] / max) * 150;
-          return (
-            <div key={b.label} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <div style={{ height: 170, display: "flex", alignItems: "flex-end", width: "100%" }}>
-                <div style={{
-                  width: "100%", height: h, background: b.color, borderRadius: "8px 8px 0 0",
-                  display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: 8,
-                  transition: "height 0.6s ease",
-                }}>
-                  <span style={{ color: "#fff", fontSize: 13, fontWeight: 700 }}>{b.value}</span>
-                </div>
-              </div>
-              <div style={{ fontSize: 11, color: C.textMuted, marginTop: 8, textAlign: "center" }}>{b.label}</div>
-            </div>
-          );
-        })}
-      </div>
-    </Card>
-  );
-}
-
-// ─── SVG Donut Chart ─────────────────────────────────────────────────────────
-function ProfileDonut() {
-  const sections = [
-    { label: "Personal", value: 100, color: C.indigo[400] },
-    { label: "Skills", value: 90, color: C.violet[400] },
-    { label: "Projects", value: 80, color: C.cyan[400] },
-    { label: "Experience", value: 60, color: C.amber[400] },
-    { label: "Certs", value: 40, color: C.coral[400] },
-  ];
-  const size = 180, cx = size / 2, cy = size / 2;
-  const radius = size / 2 - 20;
-  return (
-    <Card>
-      <h3 style={{ fontWeight: 700, fontSize: 16, color: C.text, marginBottom: 14 }}>Profile Completion Breakdown</h3>
-      <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ flexShrink: 0 }}>
-          <circle cx={cx} cy={cy} r={radius} fill="none" stroke={C.border} strokeWidth={16}/>
-          {sections.map(s => (
-            <circle key={s.label} cx={cx} cy={cy} r={radius} fill="none" stroke={s.color} strokeWidth={16}
-              strokeDasharray={`${s.value} ${100 - s.value}`}
-              strokeLinecap="round"
-              transform={`rotate(${sections.indexOf(s) * (360 / sections.length) - 90} ${cx} ${cy})`}
-            />
-          ))}
-          <text x="50%" y="47%" textAnchor="middle" fontSize={22} fontWeight={800} fill={C.text}>87%</text>
-          <text x="50%" y="60%" textAnchor="middle" fontSize={11} fill={C.textMuted}>complete</text>
-        </svg>
-        <div style={{ flex: 1 }}>
-          {sections.map(s => (
-            <div key={s.label} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-              <span style={{ width: 12, height: 12, borderRadius: 3, background: s.color, flexShrink: 0 }}/>
-              <span style={{ fontSize: 13, color: C.textBody, flex: 1 }}>{s.label}</span>
-              <span style={{ fontSize: 13, fontWeight: 700, color: C.text }}>{s.value}%</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </Card>
-  );
-}
-
-// ─── Activity Feed ───────────────────────────────────────────────────────────
-function ActivityFeed({ nav }) {
-  const items = [
-    { icon: "📈", color: C.teal[50], text: "Portfolio score increased to 82", time: "2 min ago" },
-    { icon: "📄", color: C.indigo[50], text: "Resume generated", time: "1 hr ago" },
-    { icon: "👤", color: C.violet[50], text: "Profile updated", time: "3 hrs ago" },
-    { icon: "💼", color: C.amber[50], text: "LinkedIn content created", time: "Yesterday" },
-    { icon: "🐙", color: C.coral[50], text: "GitHub README optimized", time: "2 days ago" },
-  ];
-  return (
-    <Card>
-      <h3 style={{ fontWeight: 700, fontSize: 16, color: C.text, marginBottom: 16 }}>Recent Activity</h3>
-      {items.map((it, i) => (
-        <div key={i} style={{ display: "flex", gap: 12, alignItems: "center", padding: "10px 0", borderBottom: i < items.length - 1 ? `1px solid ${C.border}` : "none" }}>
-          <div style={{ width: 34, height: 34, borderRadius: 10, background: it.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>{it.icon}</div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, color: C.textBody }}>{it.text}</div>
-            <div style={{ fontSize: 11, color: C.textMuted }}>{it.time}</div>
-          </div>
-        </div>
-      ))}
-      <button onClick={() => nav("#portfolio")} style={{ marginTop: 12, width: "100%", padding: "9px", borderRadius: 8, background: C.indigo[50], color: C.indigo[400], fontWeight: 600, fontSize: 13, border: "none", cursor: "pointer" }}>
-        View all activity
-      </button>
-    </Card>
-  );
-}
-
-// ─── AI Suggestions Panel ────────────────────────────────────────────────────
-function AISuggestions({ nav }) {
-  const suggestions = [
-    { icon: "🐙", title: "Add a GitHub link", desc: "Connect your repository to boost credibility.", points: "+5 points", color: C.indigo[400], to: "#portfolio" },
-    { icon: "🎓", title: "Add certification", desc: "Add a relevant cert to strengthen your profile.", points: "+3 points", color: C.violet[400], to: "#profile-form" },
-    { icon: "✏️", title: "Update project descriptions", desc: "Add impact metrics to project write-ups.", points: "+2 points", color: C.cyan[400], to: "#portfolio" },
-  ];
-  return (
-    <Card>
-      <h3 style={{ fontWeight: 700, fontSize: 16, color: C.text, marginBottom: 16 }}>AI Suggestions to Boost Your Score</h3>
-      {suggestions.map((s, i) => (
-        <div key={i} style={{ display: "flex", gap: 12, padding: "12px 0", borderBottom: i < suggestions.length - 1 ? `1px solid ${C.border}` : "none" }}>
-          <div style={{ width: 38, height: 38, borderRadius: 10, background: s.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>{s.icon}</div>
-          <div style={{ flex: 1 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontSize: 13, fontWeight: 600, color: C.text }}>{s.title}</span>
-              <Badge color="teal">{s.points}</Badge>
-            </div>
-            <div style={{ fontSize: 12, color: C.textMuted, marginTop: 2 }}>{s.desc}</div>
-            <button onClick={() => nav(s.to)} style={{ marginTop: 6, background: "none", border: "none", color: C.indigo[400], fontWeight: 600, fontSize: 12, cursor: "pointer", padding: 0 }}>Do this →</button>
-          </div>
-        </div>
-      ))}
-    </Card>
-  );
-}
-
 // ─── Metric Card (count-up + trend + sparkline) ──────────────────────────────
 function MetricCard({ label, value, sub, color }) {
   return (
@@ -1383,7 +1156,7 @@ function EnhancedDashboardHome({ nav }) {
   const [userName, setUserName] = useState("there");
   const [score, setScore] = useState(null);
   const [scoreLoading, setScoreLoading] = useState(true);
-  const [userLoading, setUserLoading] = useState(true);
+  const [, setUserLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -1417,6 +1190,50 @@ function EnhancedDashboardHome({ nav }) {
     return () => { cancelled = true; };
   }, []);
 
+  const [docCount, setDocCount] = useState(null);
+  const [careerMatches, setCareerMatches] = useState(null);
+  const [recruiterReadiness, setRecruiterReadiness] = useState(null);
+  const [docsLoading, setDocsLoading] = useState(true);
+  const [recentDocs, setRecentDocs] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { api } = await import("./src/api/client");
+        const [countsRes, docsRes] = await Promise.all([
+          api.get("/generate/counts"),
+          api.get("/generate/documents"),
+        ]);
+        if (cancelled) return;
+        const c = countsRes?.counts || {};
+        setDocCount(c.documents ?? null);
+        setCareerMatches(c.careerMatches ?? null);
+        setRecruiterReadiness(c.recruiterReadiness ?? null);
+        const docs = docsRes?.documents || [];
+        setRecentDocs(docs.slice(0, 4).map((d) => ({
+          name: d.name,
+          type: d.type,
+          updated: d.updatedAt ? new Date(d.updatedAt).toLocaleDateString() : "—",
+          status: d.type === "Cover Letter" ? "Draft" : "Ready",
+        })));
+        if (docs.length === 0) {
+          setRecentDocs([
+            { name: "My Portfolio", type: "Portfolio", updated: "Today", status: "Ready" },
+            { name: "LinkedIn Profile", type: "LinkedIn", updated: "Yesterday", status: "Ready" },
+            { name: "GitHub README", type: "GitHub", updated: "Yesterday", status: "Ready" },
+            { name: "Cover Letter", type: "Cover Letter", updated: "—", status: "Draft" },
+          ]);
+        }
+      } catch (_) {
+        /* ignore */
+      } finally {
+        if (!cancelled) setDocsLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   const scoreVal = score?.score ?? null;
   const completion = score?.breakdown?.profileCompleteness ?? 85;
   const improveText =
@@ -1426,12 +1243,6 @@ function EnhancedDashboardHome({ nav }) {
       ? "Add 1 more project and detailed descriptions to improve your profile."
       : "Complete your profile, skills, and projects to boost your score.";
 
-  const documents = [
-    { name: "My Portfolio", type: "Portfolio", updated: "Today", status: "Ready" },
-    { name: "LinkedIn Profile", type: "LinkedIn", updated: "Yesterday", status: "Ready" },
-    { name: "GitHub README", type: "GitHub", updated: "Yesterday", status: "Ready" },
-    { name: "Software Engineer Cover Letter", type: "Cover Letter", updated: "2 days ago", status: "Draft" },
-  ];
   const statusColor = { Ready: "#22C55E", Draft: "#F59E0B", "Needs Review": "#EF4444" };
   const statusBg = { Ready: "rgba(34,197,94,0.15)", Draft: "rgba(245,158,11,0.15)", "Needs Review": "rgba(239,68,68,0.15)" };
   return (
@@ -1440,7 +1251,7 @@ function EnhancedDashboardHome({ nav }) {
       <div style={{ marginBottom: 28, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
         <div>
           <h1 style={{ fontSize: 26, fontWeight: 800, color: C.text, margin: 0 }}>{greeting}, {userName} 👋</h1>
-          <p style={{ color: C.textMuted, marginTop: 6, fontSize: 15, marginBottom: 0 }}>Let's build a stronger professional profile.</p>
+          <p style={{ color: C.textMuted, marginTop: 6, fontSize: 15, marginBottom: 0 }}>Let&apos;s build a stronger professional profile.</p>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <span style={{ fontSize: 14, color: C.textMuted }}>🔍</span>
@@ -1451,9 +1262,9 @@ function EnhancedDashboardHome({ nav }) {
       {/* Four metrics */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 24 }}>
         <MetricCard label="Portfolio Score" value={scoreLoading ? "—" : (scoreVal ?? 85)} sub="Good — improve" color={C.violet[400]}/>
-        <MetricCard label="Career Matches" value={4} sub="Roles for you" color={C.indigo[400]}/>
-        <MetricCard label="Documents Created" value={8} sub="Assets generated" color={C.cyan[400]}/>
-        <MetricCard label="Recruiter Score" value={score?.breakdown?.recruiterReadiness ? (score.breakdown.recruiterReadiness / 20).toFixed(1) : "4.7"} sub="Strong profile" color={C.teal[400]}/>
+        <MetricCard label="Career Matches" value={docsLoading ? "—" : (careerMatches ?? 0)} sub="Roles for you" color={C.indigo[400]}/>
+        <MetricCard label="Documents Created" value={docsLoading ? "—" : (docCount ?? 0)} sub="Assets generated" color={C.cyan[400]}/>
+        <MetricCard label="Recruiter Score" value={docsLoading || recruiterReadiness == null ? "—" : (recruiterReadiness / 20).toFixed(1)} sub="Strong profile" color={C.teal[400]}/>
       </div>
 
       {/* One main action area */}
@@ -1486,8 +1297,8 @@ function EnhancedDashboardHome({ nav }) {
               </tr>
             </thead>
             <tbody>
-              {documents.map((d, i) => (
-                <tr key={i} style={{ borderBottom: i < documents.length - 1 ? `1px solid ${C.border}` : "none" }}>
+              {recentDocs.map((d, i) => (
+                <tr key={i} style={{ borderBottom: i < recentDocs.length - 1 ? `1px solid ${C.border}` : "none" }}>
                   <td style={{ padding: "12px", color: C.text, fontWeight: 600 }}>{d.name}</td>
                   <td style={{ padding: "12px", color: C.textBody }}>{d.type}</td>
                   <td style={{ padding: "12px", color: C.textBody }}>{d.updated}</td>
@@ -1831,7 +1642,7 @@ const TEMPLATES = [
   { name: "Student", bg: "#064E3B", accent: "#10B981", text: "#E2E8F0", sectionBg: "#043A2C", cardBg: "#043A2C" },
 ];
 
-function AccordionSection({ title, open, onToggle, children, render }) {
+function AccordionSection({ title, open, onToggle, children, _render }) {
   return (
     <div style={{ border: `1px solid ${C.border}`, borderRadius: 12, marginBottom: 10, overflow: "hidden", background: C.surface }}>
       <div onClick={onToggle} style={{ padding: "13px 16px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", background: open ? C.indigo[50] : C.surface }}>
@@ -2178,44 +1989,38 @@ function AIAssistantPage() {
   const [activeChat, setActiveChat] = useState(1);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
-  const [enhance, setEnhance] = useState({});
 
   const getChat = () => chats.find(c => c.id === activeChat);
 
-  const send = (text) => {
-    const msg = text || input;
-    if (!msg.trim()) return;
+  const send = async (text) => {
+    const msg = (text || input).trim();
+    if (!msg || typing) return;
     setInput("");
+    const history = [
+      ...getChat().messages.map(m => ({ role: m.from === "user" ? "user" : "assistant", content: m.text })),
+      { role: "user", content: msg },
+    ];
     setChats(prev => prev.map(c => {
       if (c.id !== activeChat) return c;
       return { ...c, messages: [...c.messages, { from: "user", text: msg }] };
     }));
     setTyping(true);
-    setTimeout(() => {
-      const reply = generateReply(msg);
+    try {
+      const { api } = await import("./src/api/client");
+      const res = await api.post("/ai/chat", { messages: history });
+      const reply = res?.reply || "Hmm, I got an empty response. Try rephrasing?";
       setChats(prev => prev.map(c => {
         if (c.id !== activeChat) return c;
-        return { ...c, messages: [...c.messages, { from: "ai", text: reply.text }] };
+        return { ...c, messages: [...c.messages, { from: "ai", text: reply }] };
       }));
+    } catch (err) {
+      setChats(prev => prev.map(c => {
+        if (c.id !== activeChat) return c;
+        return { ...c, messages: [...c.messages, { from: "ai", text: `⚠️ ${err.message}` }] };
+      }));
+    } finally {
       setTyping(false);
-    }, 1100);
-  };
-
-  const generateReply = (msg) => {
-    const lower = msg.toLowerCase();
-    if (lower.includes("headline") || lower.includes("portfolio")) {
-      return { text: "Here's an improved portfolio headline for you: **\"Full Stack Developer Building Scalable Web Applications with React & Node.js\"** — it focuses on your role, tech, and impact. Would you like me to enhance the About section too?" };
     }
-    if (lower.includes("project")) {
-      return { text: "Great idea! I'd suggest adding projects that show: 1) A full-stack app (frontend + backend + database), 2) Something with a real user base, 3) A project that aligns with your target role. E.g., an e-commerce dashboard or a real-time chat app with authentication." };
-    }
-    if (lower.includes("resume")) {
-      return { text: "Your resume looks solid. I recommend: 1) Leading each bullet with a strong action verb, 2) Adding quantifiable impact (\"improved load time by 40%\"), 3) Tailoring keywords to each job description. Want me to rewrite your Experience section?" };
-    }
-    if (lower.includes("ats")) {
-      return { text: "To optimize for ATS: include relevant keywords from the job description, use standard section headings, avoid graphics/tables, and save as a .docx or plain text. I can scan your resume for missing keywords if you paste it." };
-    }
-    return { text: "I can help you improve your professional brand! Here are the areas I can assist with: Portfolio headline, project descriptions, resume content, LinkedIn About, and ATS optimization. What would you like to work on?" };
   };
 
   const enhancement = (text) => {
@@ -2240,7 +2045,7 @@ function AIAssistantPage() {
   };
 
   const copy = (text) => {
-    try { navigator.clipboard.writeText(text.replace(/\*\*/g, "")); } catch (e) {}
+    try { navigator.clipboard.writeText(text.replace(/\*\*/g, "")); } catch (e) { /* clipboard may be unavailable */ }
   };
 
   const newChat = () => {
@@ -2341,14 +2146,79 @@ function ResumeGeneratorPage() {
     education: "B.Tech in Computer Science, Example University (2021-2025)",
     skills: "React, JavaScript, TypeScript, Node.js, Python, SQL, Docker, Git",
   });
+  const [generating, setGenerating] = useState(false);
+  const [atsScore, setAtsScore] = useState(null);
+  const [genError, setGenError] = useState(null);
   const set = (k) => (e) => setData(p => ({ ...p, [k]: e.target.value }));
 
-  const generateWithAI = () => {
-    setData(p => ({
-      ...p,
-      summary: "Innovative Full Stack Developer with 2+ years of experience architecting and delivering high-performance web applications. Proven track record of improving system efficiency by 40% through optimized database queries and modern frontend frameworks. Adept at collaborating with cross-functional teams to translate complex requirements into production-ready solutions.",
-    }));
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { authApi } = await import("./src/api/auth");
+        const { api } = await import("./src/api/client");
+        const [meRes, profileRes] = await Promise.all([authApi.me().catch(() => null), api.get("/profile").catch(() => null)]);
+        if (cancelled) return;
+        const p = profileRes?.profile;
+        setData(prev => ({
+          ...prev,
+          name: meRes?.user?.name || p?.user?.name || prev.name,
+          email: meRes?.user?.email || prev.email,
+          title: p?.title || prev.title,
+          phone: p?.phone || prev.phone,
+          summary: p?.bio || prev.summary,
+          experience: p?.experience?.length
+            ? p.experience.map(e => `${e.position}, ${e.company} (${(e.startDate||"").slice(0,4)}-${e.current ? "present" : (e.endDate||"").slice(0,4)}) — ${e.description || ""}`).join("\n")
+            : prev.experience,
+          education: p?.education?.length
+            ? p.education.map(e => `${e.degree}, ${e.institution} (${e.startYear}-${e.endYear || "present"})`).join("\n")
+            : prev.education,
+          skills: p?.skills?.length ? p.skills.map(s => s.name).join(", ") : prev.skills,
+        }));
+      } catch (_) { /* keep defaults */ }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const generateWithAI = async () => {
+    setGenerating(true);
+    setGenError(null);
+    try {
+      const { api } = await import("./src/api/client");
+      const res = await api.post("/generate/resume");
+      const r = res?.resume;
+      if (!r) throw new Error("No resume returned");
+      setData({
+        name: r.personalInfo?.name || data.name,
+        title: r.personalInfo?.title || data.title,
+        email: r.personalInfo?.email || data.email,
+        phone: r.personalInfo?.phone || data.phone,
+        summary: r.summary || data.summary,
+        experience: r.experience?.length
+          ? r.experience.map(e => `${e.position}, ${e.company} (${(e.startDate||"").slice(0,4)}-${e.current ? "present" : (e.endDate||"").slice(0,4)}) — ${e.description || ""}`).join("\n")
+          : data.experience,
+        education: r.education?.length
+          ? r.education.map(e => `${e.degree}${e.fieldOfStudy ? " in " + e.fieldOfStudy : ""}, ${e.institution} (${e.startYear}-${e.endYear || "present"})`).join("\n")
+          : data.education,
+        skills: r.skills?.length ? r.skills.map(s => s.name).join(", ") : data.skills,
+      });
+      if (r.atsScore != null) setAtsScore(r.atsScore);
+    } catch (err) {
+      setGenError(err.message || "Failed to generate resume. Complete your profile first.");
+    } finally {
+      setGenerating(false);
+    }
   };
+
+  const downloadPdf = () => {
+    try {
+      const win = window.open("", "_blank");
+      if (!win) return alert("Popup blocked. Allow popups to download your resume.");
+      win.document.write(`<!DOCTYPE html><html><head><title>${data.name} - Resume</title><style>body{font-family:Arial,sans-serif;max-width:760px;margin:40px auto;padding:0 24px;color:#111}h1{margin:0;font-size:28px}p{line-height:1.6;margin:6px 0}.muted{color:#666;font-size:13px}.sec{margin-top:20px}.sec h3{text-transform:uppercase;font-size:12px;letter-spacing:1px;color:#3B82F6;margin:0 0 6px}pre{white-space:pre-wrap;font-family:inherit;line-height:1.6;margin:0}</style></head><body><div style="text-align:center;border-bottom:2px solid #111;padding-bottom:12px"><h1>${esc(data.name)}</h1><div style="color:#3B82F6;font-weight:600">${esc(data.title)}</div><div class="muted">${esc(data.email)} · ${esc(data.phone)}</div></div><div class="sec"><h3>Summary</h3><p>${esc(data.summary)}</p></div><div class="sec"><h3>Experience</h3><pre>${esc(data.experience)}</pre></div><div class="sec"><h3>Education</h3><p>${esc(data.education)}</p></div><div class="sec"><h3>Skills</h3><p>${esc(data.skills)}</p></div><script>window.onload=function(){window.print();}</script></body></html>`);
+      win.document.close();
+    } catch (e) { alert("Couldn't open PDF export."); }
+  };
+  const esc = (s) => String(s || "").replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 
   return (
     <div style={{ padding: "28px 32px" }}>
@@ -2357,11 +2227,15 @@ function ResumeGeneratorPage() {
           <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text, margin: 0 }}>Resume Generator</h1>
           <p style={{ color: C.textMuted, fontSize: 14, margin: 0 }}>Create an ATS-optimized resume with live preview.</p>
         </div>
-        <div style={{ display: "flex", gap: 10 }}>
-          <Btn variant="ghost" small onClick={() => alert("Resume downloaded (simulated)")}>⬇ Download as PDF</Btn>
-          <Btn onClick={generateWithAI}>✨ Generate with AI</Btn>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {atsScore != null && <Badge color="teal">ATS {atsScore}</Badge>}
+          <Btn variant="ghost" small onClick={downloadPdf}>⬇ Download as PDF</Btn>
+          <Btn onClick={generateWithAI} disabled={generating}>{generating ? "Generating…" : "✨ Generate with AI"}</Btn>
         </div>
       </div>
+      {genError && (
+        <div style={{ background: C.coral[50], color: C.coral[400], border: `1px solid ${C.coral[400]}`, borderRadius: 10, padding: "10px 14px", fontSize: 13, marginBottom: 16 }}>⚠️ {genError}</div>
+      )}
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
         {/* Left: form */}
@@ -2435,25 +2309,50 @@ function LinkedInGeneratorPage() {
     goal: "Land a full-time developer role at a product company",
   });
   const [generated, setGenerated] = useState(false);
-
-  const output = {
-    headline: `Full Stack Developer | Building Scalable Web Apps with React & Node.js | Passionate About Clean Code`,
-    about: `I'm a Full Stack Developer with ${input.years || "2"} years of experience turning complex problems into elegant, user-friendly solutions. My core stack includes ${input.skills}. I focus on performance, clean architecture, and delivering measurable business impact. My career goal: ${input.goal}.`,
-    exp1: `• Architected and shipped 5+ full-stack applications using React, Node.js, and cloud infrastructure, improving user engagement by 35%\n• Optimized database queries and API responses, reducing average load time by 40%`,
-    exp2: `• Collaborated with designers and PMs to translate requirements into production-ready features\n• Introduced automated testing, boosting release confidence and cutting bugs by 25%`,
-    featured: `1. Portfolio Website (React)\n2. E-commerce Platform (Node.js + MongoDB)\n3. Real-time Chat App (Socket.io, Redis)`,
-  };
+  const [generating, setGenerating] = useState(false);
+  const [genError, setGenError] = useState(null);
+  const [output, setOutput] = useState(null);
 
   const set = (k) => (e) => setInput(p => ({ ...p, [k]: e.target.value }));
-  const copy = (t) => { try { navigator.clipboard.writeText(t); } catch (e) {} };
+  const copy = (t) => { try { navigator.clipboard.writeText(t); } catch (e) { /* clipboard may be unavailable */ } };
+
+  const generate = async () => {
+    setGenerating(true);
+    setGenError(null);
+    try {
+      const { api } = await import("./src/api/client");
+      const res = await api.post("/generate/linkedin");
+      const li = res?.linkedin;
+      if (!li) throw new Error("No LinkedIn content returned");
+      const experienceText = (li.experience || []).map(e =>
+        `${[e.position, e.company].filter(Boolean).join(" — ")}${e.startDate ? ` (${e.startDate.slice(0,4)}-${e.current ? "present" : (e.endDate||"").slice(0,4)})` : ""}\n${e.description || ""}`
+      ).join("\n\n");
+      const featuredText = (li.featured || []).map(f => `• ${f.title}${f.url ? ` - ${f.url}` : ""}`).join("\n") || "—";
+      setOutput({
+        headline: li.headline || "",
+        about: li.aboutSection || "",
+        exp: experienceText || "—",
+        featured: featuredText,
+        posts: li.postSuggestions || [],
+      });
+      setGenerated(true);
+    } catch (err) {
+      setGenError(err.message || "Failed to generate LinkedIn content. Complete your profile first.");
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   return (
     <div style={{ padding: "28px 32px", maxWidth: 1000 }}>
       <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text, margin: 0, marginBottom: 4 }}>LinkedIn Content Generator</h1>
-      <p style={{ color: C.textMuted, fontSize: 14, marginTop: 0, marginBottom: 24 }}>Generate a professional LinkedIn presence from a few inputs.</p>
+      <p style={{ color: C.textMuted, fontSize: 14, marginTop: 0, marginBottom: 24 }}>Generate your LinkedIn presence from your saved profile.</p>
+      {genError && (
+        <div style={{ background: C.coral[50], color: C.coral[400], border: `1px solid ${C.coral[400]}`, borderRadius: 10, padding: "10px 14px", fontSize: 13, marginBottom: 16 }}>⚠️ {genError}</div>
+      )}
 
       <Card style={{ marginBottom: 24 }}>
-        <h3 style={{ fontWeight: 700, fontSize: 16, color: C.text, marginBottom: 16 }}>Your Input</h3>
+        <h3 style={{ fontWeight: 700, fontSize: 16, color: C.text, marginBottom: 16 }}>Your Profile (auto-loaded)</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
           <div>
             <label style={labelStyle}>Current Role</label>
@@ -2472,15 +2371,17 @@ function LinkedInGeneratorPage() {
             <input style={fieldStyle} value={input.goal} onChange={set("goal")}/>
           </div>
         </div>
-        <button onClick={() => setGenerated(true)} style={{ marginTop: 16, padding: "12px 28px", borderRadius: 10, background: `linear-gradient(135deg, ${C.indigo[600]}, ${C.violet[600]}, ${C.violet[400]})`, color: "#fff", fontWeight: 700, fontSize: 14, border: "none", cursor: "pointer" }}>✨ Generate All</button>
+        <button onClick={generate} disabled={generating} style={{ marginTop: 16, padding: "12px 28px", borderRadius: 10, background: generating ? "#334155" : `linear-gradient(135deg, ${C.indigo[600]}, ${C.violet[600]}, ${C.violet[400]})`, color: "#fff", fontWeight: 700, fontSize: 14, border: "none", cursor: generating ? "not-allowed" : "pointer" }}>
+          {generating ? "Generating…" : "✨ Generate All"}
+        </button>
       </Card>
 
-      {generated && (
+      {generated && output && (
         <>
           {[
             ["💼", "Professional Headline", output.headline],
             ["📝", "About Section", output.about],
-            ["🏢", "Experience Descriptions", output.exp1 + "\n\n" + output.exp2],
+            ["🏢", "Experience Descriptions", output.exp],
             ["⭐", "Featured Section Suggestions", output.featured],
           ].map(([icon, title, text], i) => (
             <Card key={i} style={{ marginBottom: 16 }}>
@@ -2491,6 +2392,17 @@ function LinkedInGeneratorPage() {
               <textarea style={{ ...fieldStyle, minHeight: 90, whiteSpace: "pre-wrap" }} defaultValue={text}/>
             </Card>
           ))}
+          {output.posts.length > 0 && (
+            <Card>
+              <h3 style={{ fontWeight: 700, fontSize: 15, color: C.text, margin: 0, marginBottom: 12 }}>💬 Post Suggestions</h3>
+              {output.posts.map((p, i) => (
+                <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start", padding: "10px 0", borderBottom: i < output.posts.length - 1 ? `1px solid ${C.border}` : "none" }}>
+                  <span style={{ fontSize: 13, color: C.textBody, flex: 1, lineHeight: 1.5 }}>{p}</span>
+                  <button onClick={() => copy(p)} style={{ padding: "5px 12px", borderRadius: 8, border: `1px solid ${C.indigo[400]}`, background: C.indigo[50], color: C.indigo[400], fontSize: 11, cursor: "pointer" }}>📋</button>
+                </div>
+              ))}
+            </Card>
+          )}
         </>
       )}
     </div>
@@ -2500,54 +2412,63 @@ function LinkedInGeneratorPage() {
 // ─── GitHub README Generator ─────────────────────────────────────────────────
 function GitHubReadmeGeneratorPage() {
   const [username, setUsername] = useState("your-username");
-  const [repos, setRepos] = useState(["my-portfolio", "ecommerce-app", "task-manager"]);
+  const [repos, setRepos] = useState([]);
   const [repoInput, setRepoInput] = useState("");
+  const [markdown, setMarkdown] = useState("");
+  const [generating] = useState(false);
+  const [genError, setGenError] = useState(null);
+
+  const loadDefault = async () => {
+    try {
+      const { authApi } = await import("./src/api/auth");
+      const me = await authApi.me();
+      const name = me?.user?.name;
+      if (name) setUsername(name.toLowerCase().replace(/\s+/g, ""));
+      const { api } = await import("./src/api/client");
+      const res = await api.post("/generate/github-readme");
+      const r = res?.readme;
+      if (r) {
+        setMarkdown(r.content || r.markdown || "");
+        setRepos((r.repositories || []).map(x => x.name).filter(Boolean));
+      }
+    } catch (e) {
+      setGenError(e.message || "Failed to load. Complete your profile first.");
+    }
+  };
+
+  useEffect(() => { loadDefault(); }, []);
 
   const addRepo = () => { if (repoInput.trim() && !repos.includes(repoInput.trim())) setRepos(prev => [...prev, repoInput.trim()]); setRepoInput(""); };
   const removeRepo = (r) => setRepos(prev => prev.filter(x => x !== r));
 
-  const markdown = `# Hi there, I'm @${username} 👋
+  const deriveMarkdown = () => {
+    if (markdown) return markdown;
+    return `# Hi there, I'm @${username} 👋
 
 ## 👨‍💻 About Me
-I'm a passionate software developer focused on building elegant, scalable web applications. I love exploring new technologies and solving real-world problems.
-
-## 🚀 Tech Stack
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+I'm a passionate software developer focused on building elegant, scalable web applications.
 
 ## 📌 Featured Projects
-${repos.map(r => `- **[${r}](https://github.com/${username}/${r})** — A project that demonstrates my skills in building real-world applications.`).join("\n")}
-
-## 🌱 Currently Learning
-- Advanced React patterns and performance optimization
-- Cloud deployment with AWS
-- System design fundamentals
+${repos.map(r => `- **${r}** — A project that demonstrates my skills in building real-world applications.`).join("\n")}
 
 ## 📫 Contact
 - GitHub: [@${username}](https://github.com/${username})
-- Email: ${username}@example.com
 `;
+  };
 
-  const copyMd = () => { try { navigator.clipboard.writeText(markdown); } catch (e) {} };
+  const copyMd = () => { try { navigator.clipboard.writeText(deriveMarkdown()); } catch (e) { /* clipboard may be unavailable */ } };
 
   const renderMarkdown = () => (
     <div style={{ fontFamily: "'Segoe UI', sans-serif", lineHeight: 1.6, fontSize: 14, color: "#CBD5E1" }}>
-      <h1 style={{ fontSize: 24, borderBottom: `1px solid ${C.border}`, paddingBottom: 8, color: C.text }}>Hi there, I'm @{username} 👋</h1>
+      <h1 style={{ fontSize: 24, borderBottom: `1px solid ${C.border}`, paddingBottom: 8, color: C.text }}>Hi there, I&apos;m @{username} 👋</h1>
       <h2 style={{ fontSize: 18, marginTop: 16, color: C.text }}>👨‍💻 About Me</h2>
-      <p>I'm a passionate software developer focused on building elegant, scalable web applications. I love exploring new technologies and solving real-world problems.</p>
-      <h2 style={{ fontSize: 18, marginTop: 16, color: C.text }}>🚀 Tech Stack</h2>
-      <p style={{ fontFamily: "monospace", background: "#1E2745", padding: 12, borderRadius: 6 }}>React · Node.js · Python · JavaScript</p>
+      <p>I&apos;m a passionate software developer focused on building elegant, scalable web applications.</p>
       <h2 style={{ fontSize: 18, marginTop: 16, color: C.text }}>📌 Featured Projects</h2>
-      {repos.map(r => (
+      {repos.length > 0 ? repos.map(r => (
         <div key={r} style={{ marginLeft: 16, marginBottom: 4 }}>• <b>{r}</b> — A project that demonstrates my skills</div>
-      ))}
-      <h2 style={{ fontSize: 18, marginTop: 16, color: C.text }}>🌱 Currently Learning</h2>
-      <div style={{ marginLeft: 16 }}>• Advanced React patterns and performance optimization</div>
-      <div style={{ marginLeft: 16 }}>• Cloud deployment with AWS & System design</div>
+      )) : <div style={{ marginLeft: 16 }}>—</div>}
       <h2 style={{ fontSize: 18, marginTop: 16, color: C.text }}>📫 Contact</h2>
-      <p>GitHub: <a style={{ color: "#3B82F6" }}>@{username}</a> · Email: {username}@example.com</p>
+      <p>GitHub: <a style={{ color: "#3B82F6" }}>@{username}</a></p>
     </div>
   );
 
@@ -2556,13 +2477,16 @@ ${repos.map(r => `- **[${r}](https://github.com/${username}/${r})** — A projec
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text, margin: 0 }}>GitHub README Generator</h1>
-          <p style={{ color: C.textMuted, fontSize: 14, margin: 0 }}>Generate a professional profile README for GitHub.</p>
+          <p style={{ color: C.textMuted, fontSize: 14, margin: 0 }}>Generate a professional profile README from your profile.</p>
         </div>
         <div style={{ display: "flex", gap: 10 }}>
           <Btn variant="ghost" small onClick={copyMd}>📋 Copy Markdown</Btn>
-          <Btn onClick={copyMd}>Generate</Btn>
+          <Btn onClick={loadDefault} disabled={generating}>{generating ? "Generating…" : "✦ Generate"}</Btn>
         </div>
       </div>
+      {genError && (
+        <div style={{ background: C.coral[50], color: C.coral[400], border: `1px solid ${C.coral[400]}`, borderRadius: 10, padding: "10px 14px", fontSize: 13, marginBottom: 16 }}>⚠️ {genError}</div>
+      )}
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
         <div>
@@ -2583,17 +2507,22 @@ ${repos.map(r => `- **[${r}](https://github.com/${username}/${r})** — A projec
                   <button onClick={() => removeRepo(r)} style={{ background: "none", border: "none", cursor: "pointer", color: C.indigo[400], fontSize: 13 }}>✕</button>
                 </span>
               ))}
+              {repos.length === 0 && <span style={{ fontSize: 12, color: C.textMuted }}>Click Generate to pull your projects.</span>}
             </div>
             <div style={{ fontSize: 12, color: C.textMuted, lineHeight: 1.6 }}>
-              Generated sections: About Me, Tech Stack, Featured Projects, Currently Learning, Contact.
+              Generated sections: About Me, Tech Stack, Featured Projects, Stats, Contact — pulled from your saved profile.
             </div>
           </Card>
         </div>
 
         <div>
           <Badge color="teal">Live Markdown Preview</Badge>
-          <div style={{ background: C.surface, borderRadius: 8, border: `1px solid ${C.border}`, padding: 28, marginTop: 10, boxShadow: "0 4px 20px rgba(0,0,0,0.35)", fontFamily: "monospace", whiteSpace: "pre-wrap", fontSize: 12, maxHeight: 480, overflowY: "auto", color: "#CBD5E1" }}>
-            {markdown}
+          <div style={{ background: C.surface, borderRadius: 8, border: `1px solid ${C.border}`, padding: 28, marginTop: 10, boxShadow: "0 4px 20px rgba(0,0,0,0.35)", maxHeight: 560, overflowY: "auto" }}>
+            {markdown ? (
+              <div style={{ fontFamily: "monospace", whiteSpace: "pre-wrap", fontSize: 12, color: "#CBD5E1" }}>{markdown}</div>
+            ) : (
+              renderMarkdown()
+            )}
           </div>
         </div>
       </div>
@@ -2603,19 +2532,56 @@ ${repos.map(r => `- **[${r}](https://github.com/${username}/${r})** — A projec
 
 // ─── Cover Letter Generator ──────────────────────────────────────────────────
 function CoverLetterGeneratorPage() {
-  const [input, setInput] = useState({ company: "", jobTitle: "", description: "", name: "Alex Johnson" });
+  const [input, setInput] = useState({ company: "", jobTitle: "", description: "" });
   const [generated, setGenerated] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [genError, setGenError] = useState(null);
+  const [letter, setLetter] = useState("");
   const set = (k) => (e) => setInput(p => ({ ...p, [k]: e.target.value }));
+  const copy = (t) => { try { navigator.clipboard.writeText(t); } catch (e) { /* clipboard may be unavailable */ } };
 
-  const letter = input.description
-    ? `Dear Hiring Manager,\n\nI am writing to express my strong interest in the ${input.jobTitle || "Software Developer"} position at ${input.company || "your company"}. As a passionate developer with a track record of building impactful web applications, I am excited about the opportunity to contribute to your team.\n\nWhy This Company:\nI admire ${input.company || "your company"} for its innovative approach and am eager to bring my technical skills and drive to your mission.\n\nWhat I Bring:\nBased on the job description (${input.description.slice(0, 80)}...), I bring relevant experience in modern web development, strong problem-solving skills, and a collaborative mindset that fits your culture.\n\nI would welcome the opportunity to discuss how my background aligns with your needs. Thank you for your time and consideration.\n\nSincerely,\n${input.name || "Alex Johnson"}` : "";
+  const generateCoverLetter = async () => {
+    if (!input.company.trim() || !input.jobTitle.trim()) {
+      setGenError("Please enter both the company name and job title.");
+      return;
+    }
+    setGenerating(true);
+    setGenError(null);
+    try {
+      const { api } = await import("./src/api/client");
+      const res = await api.post("/generate/cover-letter", {
+        companyName: input.company,
+        jobTitle: input.jobTitle,
+        jobDescription: input.description,
+      });
+      const content = res?.coverLetter?.content;
+      if (!content) throw new Error("No cover letter returned");
+      setLetter(content);
+      setGenerated(true);
+    } catch (err) {
+      setGenError(err.message || "Failed to generate. Complete your profile first.");
+    } finally {
+      setGenerating(false);
+    }
+  };
 
-  const copy = (t) => { try { navigator.clipboard.writeText(t); } catch (e) {} };
+  const downloadLetter = () => {
+    try {
+      const win = window.open("", "_blank");
+      if (!win) return alert("Popup blocked. Allow popups to download your cover letter.");
+      const esc = (s) => String(s || "").replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+      win.document.write(`<!DOCTYPE html><html><head><title>Cover Letter</title><style>body{font-family:Arial,sans-serif;max-width:720px;margin:40px auto;padding:0 24px;color:#111}pre{white-space:pre-wrap;font-family:inherit;line-height:1.8;font-size:14px}</style></head><body><pre>${esc(letter)}</pre><script>window.onload=function(){window.print();}</script></body></html>`);
+      win.document.close();
+    } catch (e) { alert("Couldn't open PDF export."); }
+  };
 
   return (
     <div style={{ padding: "28px 32px", maxWidth: 800 }}>
       <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text, margin: 0, marginBottom: 4 }}>Cover Letter Generator</h1>
       <p style={{ color: C.textMuted, fontSize: 14, marginTop: 0, marginBottom: 24 }}>Create a personalized cover letter from a job description.</p>
+      {genError && (
+        <div style={{ background: C.coral[50], color: C.coral[400], border: `1px solid ${C.coral[400]}`, borderRadius: 10, padding: "10px 14px", fontSize: 13, marginBottom: 16 }}>⚠️ {genError}</div>
+      )}
 
       <Card style={{ marginBottom: 24 }}>
         <h3 style={{ fontWeight: 700, fontSize: 16, color: C.text, marginBottom: 16 }}>Job Details</h3>
@@ -2629,15 +2595,11 @@ function CoverLetterGeneratorPage() {
             <input style={fieldStyle} value={input.jobTitle} onChange={set("jobTitle")}/>
           </div>
         </div>
-        <div style={{ marginBottom: 14 }}>
+        <div style={{ marginBottom: 16 }}>
           <label style={labelStyle}>Job Description</label>
           <textarea style={{ ...fieldStyle, minHeight: 100 }} placeholder="Paste the job description here…" value={input.description} onChange={set("description")}/>
         </div>
-        <div style={{ marginBottom: 16 }}>
-          <label style={labelStyle}>Your Name</label>
-          <input style={fieldStyle} value={input.name} onChange={set("name")}/>
-        </div>
-        <Btn onClick={() => setGenerated(true)}>✨ Generate Cover Letter</Btn>
+        <Btn onClick={generateCoverLetter} disabled={generating}>{generating ? "Generating…" : "✨ Generate Cover Letter"}</Btn>
       </Card>
 
       {generated && (
@@ -2646,7 +2608,7 @@ function CoverLetterGeneratorPage() {
             <Badge color="teal">Generated Letter</Badge>
             <div style={{ display: "flex", gap: 8 }}>
               <Btn variant="ghost" small onClick={() => copy(letter)}>📋 Copy</Btn>
-              <Btn variant="outline" small onClick={() => alert("Download started (simulated)")}>⬇ Download</Btn>
+              <Btn variant="outline" small onClick={downloadLetter}>⬇ Download</Btn>
             </div>
           </div>
           <div style={{ background: "#101A2E", borderRadius: 12, padding: 28 }}>
@@ -2826,7 +2788,7 @@ function PortfolioScorePage() {
               const y = 105 - ((v - 60) / 30) * 90;
               return <circle key={l} cx={x} cy={y} r={5} fill={C.indigo[600]}/>;
             })}
-            {[["Mar",70],["Apr",74],["May",76],["Jun",78],["Jul",82]].map(([l, v], i, arr) => {
+            {[["Mar",70],["Apr",74],["May",76],["Jun",78],["Jul",82]].map(([_l, v], i, arr) => {
               const x = 20 + (i / (arr.length - 1)) * 260;
               const y = 105 - ((v - 60) / 30) * 90;
               if (i < arr.length - 1) {
@@ -2850,19 +2812,40 @@ function PortfolioScorePage() {
 function RecruiterSimulationPage({ nav }) {
   const [started, setStarted] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [loadingSim, setLoadingSim] = useState(false);
+  const [simError, setSimError] = useState(null);
+  const [simulations, setSimulations] = useState([]);
 
-  const startSim = () => {
+  const startSim = async () => {
     setStarted(true);
-    setTimeout(() => {
-      setFeedback({
-        firstImpression: 4,
-        technical: 4,
-        communication: 3,
-        overall: "Your portfolio presents a solid technical foundation with a clean, professional layout. The projects are relevant and demonstrate practical skills, though adding more quantifiable impact would strengthen your profile further.",
-        strengths: ["Clean and professional visual design", "Strong, relevant project selection", "Clear skills section with modern tech stack", "Easy navigation and fast load time"],
-        improvements: ["Add quantified impact metrics to projects", "Include a professional profile photo", "Expand the About section with a personal touch", "Add links to live demos for all projects"],
-      });
-    }, 1600);
+    setLoadingSim(true);
+    setSimError(null);
+    try {
+      const { api } = await import("./src/api/client");
+      const res = await api.get("/score/recruiter-simulation");
+      const sims = res?.simulations || [];
+      setSimulations(sims);
+      if (sims.length) {
+        const sim = sims[0];
+        const like = sim.likelihood ?? 70;
+        setFeedback({
+          firstImpression: Math.max(1, Math.round(like / 20)),
+          technical: Math.max(1, Math.round(like / 22)),
+          communication: Math.max(1, Math.round(like / 25)),
+          overall: `Evaluating your candidacy for ${sim.role || "the role"} at ${sim.company || "the company"}: our simulated recruiter estimates your likelihood of advancing is around ${like}%. ${(sim.feedback || []).join(" ")}`,
+          strengths: (sim.matchReasons || []).filter(Boolean),
+          improvements: (sim.feedback || []).filter(Boolean),
+          label: `${sim.recruiterName || "Recruiter"}, ${sim.company || ""}`,
+        });
+      } else {
+        setFeedback(null);
+        setSimError("No simulation results available yet. Complete your profile first.");
+      }
+    } catch (err) {
+      setSimError(err.message || "Failed to run recruiter simulation. Complete your profile first.");
+    } finally {
+      setLoadingSim(false);
+    }
   };
 
   const StarRow = ({ value }) => (
@@ -2878,7 +2861,7 @@ function RecruiterSimulationPage({ nav }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text, margin: 0 }}>Recruiter Simulation</h1>
-          <p style={{ color: C.textMuted, fontSize: 14, margin: 0 }}>See your portfolio through a recruiter's eyes.</p>
+          <p style={{ color: C.textMuted, fontSize: 14, margin: 0 }}>See your portfolio through a recruiter&apos;s eyes.</p>
         </div>
         <div style={{ display: "flex", gap: 10 }}>
           <Btn variant="ghost" small onClick={() => nav("#score")}>← Back to Score</Btn>
@@ -2895,18 +2878,30 @@ function RecruiterSimulationPage({ nav }) {
         </Card>
       )}
 
-      {started && !feedback && (
+      {started && !feedback && !simError && (
         <Card style={{ textAlign: "center", padding: "60px 40px" }}>
           <div style={{ fontSize: 40, marginBottom: 16, animation: "blink 1s infinite" }}>🔍</div>
-          <h3 style={{ fontSize: 18, fontWeight: 700, color: C.text }}>Recruiter is reviewing your portfolio…</h3>
-          <p style={{ fontSize: 13, color: C.textMuted }}>Scanning hero section, about, skills, projects, and contact info.</p>
+          <h3 style={{ fontSize: 18, fontWeight: 700, color: C.text }}>{loadingSim ? "Recruiter is reviewing your portfolio…" : "Ready to be evaluated by a virtual recruiter?"}</h3>
+          <p style={{ fontSize: 13, color: C.textMuted }}>{loadingSim ? "Scanning hero section, about, skills, projects, and contact info." : "Press Start Simulation to begin."}</p>
+        </Card>
+      )}
+
+      {simError && (
+        <Card style={{ textAlign: "center", padding: "40px" }}>
+          <div style={{ fontSize: 40, marginBottom: 12 }}>🚫</div>
+          <h3 style={{ fontSize: 18, fontWeight: 700, color: C.text, marginBottom: 8 }}>Couldn&apos;t run the simulation</h3>
+          <p style={{ fontSize: 13, color: C.coral[400], margin: "0 0 16px" }}>{simError}</p>
+          <Btn variant="outline" onClick={() => { setSimError(null); setStarted(false); }}>← Try Again</Btn>
         </Card>
       )}
 
       {feedback && (
         <>
           <Card style={{ marginBottom: 16 }}>
-            <h3 style={{ fontWeight: 700, fontSize: 16, color: C.text, marginBottom: 16 }}>AI Recruiter Feedback</h3>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+              <h3 style={{ fontWeight: 700, fontSize: 16, color: C.text, margin: 0 }}>AI Recruiter Feedback</h3>
+              {feedback.label && <Badge color="indigo">{feedback.label}</Badge>}
+            </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 20 }}>
               <div style={{ textAlign: "center" }}>
                 <div style={{ fontSize: 13, color: C.textMuted, marginBottom: 6 }}>First Impression</div>
@@ -2947,8 +2942,458 @@ function RecruiterSimulationPage({ nav }) {
               ))}
             </Card>
           </div>
+
+          {simulations.length > 1 && (
+            <div style={{ marginTop: 20 }}>
+              <h3 style={{ fontWeight: 700, fontSize: 15, color: C.text, marginBottom: 12 }}>All Evaluations</h3>
+              <div style={{ display: "grid", gap: 12 }}>
+                {simulations.map((sim) => (
+                  <div key={sim.id} style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${C.border}`, borderRadius: 12, padding: 16 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+                      <div>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: C.text }}>{sim.company}</div>
+                        <div style={{ fontSize: 12, color: C.textMuted }}>{sim.recruiterName} · {sim.role}</div>
+                      </div>
+                      <Badge color="teal">{sim.likelihood}% match</Badge>
+                    </div>
+                    {(sim.feedback || []).slice(0, 2).map((f, i) => (
+                      <div key={i} style={{ fontSize: 12.5, color: C.textBody, lineHeight: 1.5 }}>• {f}</div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </>
       )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PHASE 7b — Documents Hub, Career Match, Feedback
+// ═══════════════════════════════════════════════════════════════════════════
+
+function DocumentsHubPage({ nav }) {
+  const [docs, setDocs] = useState([]);
+  const [counts, setCounts] = useState({ total: 0 });
+  const [loading, setLoading] = useState(true);
+  const [preview, setPreview] = useState(null);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const { api } = await import("./src/api/client");
+      const res = await api.get("/generate/documents");
+      setDocs(res?.documents || []);
+      setCounts(res?.counts || { total: 0 });
+    } catch (e) {
+      setDocs([]);
+      setCounts({ total: 0 });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const openPreview = (d) => {
+    let text = "";
+    if (d.type === "Resume" && d.content) {
+      const c = d.content;
+      text = `Name: ${c.personalInfo?.name || ""}\nTitle: ${c.personalInfo?.title || ""}\n\nSummary:\n${c.summary || ""}\n\nExperience:\n${(c.experience || []).map(e => `${e.position} at ${e.company}${e.startDate ? ` (${e.startDate.slice(0,4)}-${e.current ? "present" : (e.endDate||"").slice(0,4)})` : ""} — ${e.description || ""}`).join("\n")}\n\nSkills:\n${(c.skills || []).map(s => s.name).join(", ")}`;
+    } else if (d.type === "Cover Letter" && d.content?.content) {
+      text = d.content.content;
+    } else if (d.type === "GitHub" && d.content?.content) {
+      text = d.content.content;
+    } else if (d.type === "LinkedIn" && d.content?.aboutSection) {
+      text = `Headline:\n${d.content.headline || ""}\n\nAbout Section:\n${d.content.aboutSection || ""}`;
+    }
+    setPreview({ ...d, text });
+  };
+
+  const copy = (t) => { try { navigator.clipboard.writeText(t); } catch (_) { /* ignore */ } };
+
+  const typeMeta = {
+    Resume: { icon: "📄", color: C.indigo[400] },
+    LinkedIn: { icon: "💼", color: C.cyan[400] },
+    GitHub: { icon: "🐙", color: C.violet[400] },
+    "Cover Letter": { icon: "✉️", color: C.amber[400] },
+    Portfolio: { icon: "🖥️", color: C.teal[400] },
+  };
+
+  return (
+    <div style={{ padding: "28px 32px", maxWidth: 1000 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <div>
+          <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text, margin: 0 }}>Documents Hub</h1>
+          <p style={{ color: C.textMuted, fontSize: 14, margin: 0 }}>All your generated professional documents in one place.</p>
+        </div>
+        <div style={{ display: "flex", gap: 10 }}>
+          <Btn variant="ghost" small onClick={() => nav("#portfolio")}>New Portfolio</Btn>
+          <Btn variant="ghost" small onClick={() => nav("#resume")}>New Resume</Btn>
+          <Btn variant="ghost" small onClick={() => nav("#cover-letter")}>New Cover Letter</Btn>
+        </div>
+      </div>
+
+      {counts.total > 0 && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 24 }}>
+          <MetricCard label="Resumes" value={counts.resumes ?? 0} sub="Generated" color={C.indigo[400]}/>
+          <MetricCard label="LinkedIn" value={counts.linkedin ?? 0} sub="Profiles" color={C.cyan[400]}/>
+          <MetricCard label="GitHub" value={counts.github ?? 0} sub="Readmes" color={C.violet[400]}/>
+          <MetricCard label="Cover Letters" value={counts.coverLetters ?? 0} sub="Written" color={C.amber[400]}/>
+        </div>
+      )}
+
+      {loading ? (
+        <Card style={{ textAlign: "center", padding: "60px 40px" }}><p style={{ color: C.textMuted }}>Loading your documents…</p></Card>
+      ) : docs.length === 0 ? (
+        <Card style={{ textAlign: "center", padding: "60px 40px" }}>
+          <div style={{ fontSize: 48, marginBottom: 12 }}>📂</div>
+          <h3 style={{ fontSize: 18, fontWeight: 700, color: C.text, marginBottom: 8 }}>No documents yet</h3>
+          <p style={{ fontSize: 13, color: C.textMuted, marginBottom: 18 }}>Generate a resume, LinkedIn profile, GitHub README, or cover letter and it appears here.</p>
+          <Btn onClick={() => nav("#resume")}>+ Create your first document</Btn>
+        </Card>
+      ) : (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "start" }}>
+          <div>
+            <h3 style={{ fontWeight: 700, fontSize: 15, color: C.text, marginBottom: 12 }}>All Documents ({docs.length})</h3>
+            <div style={{ display: "grid", gap: 12 }}>
+              {docs.map((d) => {
+                const meta = typeMeta[d.type] || { icon: "📄", color: C.indigo[400] };
+                return (
+                  <Card key={d.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
+                      <div style={{ fontSize: 26 }}>{meta.icon}</div>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{d.name}</div>
+                        <div style={{ fontSize: 12, color: C.textMuted }}>
+                          {d.type}
+                          {d.atsScore != null && ` · ATS ${d.atsScore}`} · {d.updatedAt ? new Date(d.updatedAt).toLocaleDateString() : "—"}
+                        </div>
+                      </div>
+                    </div>
+                    <Btn variant="outline" small onClick={() => openPreview(d)}>View</Btn>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+
+          {preview ? (
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                <h3 style={{ fontWeight: 700, fontSize: 15, color: C.text, margin: 0 }}>{preview.name}</h3>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <Btn variant="ghost" small onClick={() => copy(preview.text)}>📋 Copy</Btn>
+                  <Btn variant="ghost" small onClick={() => setPreview(null)}>✕ Close</Btn>
+                </div>
+              </div>
+              <div style={{ background: "#101A2E", borderRadius: 12, padding: 20 }}>
+                <div style={{ background: C.surface, borderRadius: 6, border: `1px solid ${C.border}`, padding: 24, whiteSpace: "pre-wrap", fontSize: 13, lineHeight: 1.7, color: C.textBody, maxHeight: 520, overflowY: "auto" }}>
+                  {preview.text}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <Card style={{ textAlign: "center", padding: "40px", color: C.textMuted }}>Select a document to preview it.</Card>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CareerMatchPage({ nav }) {
+  const [matches, setMatches] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { api } = await import("./src/api/client");
+        const scoreRes = await api.get("/score");
+        let m = [];
+        if (scoreRes?.score) {
+          const b = scoreRes.score.breakdown || {};
+          const base = Math.round((b.keywordOptimization ?? 70) / 10);
+          m = [
+            { title: "Full Stack Developer", tag: "Best match", match: Math.min(96, base + 5), skills: ["React", "Node.js", "PostgreSQL"], type: "Remote · Full-time" },
+            { title: "Frontend Engineer", tag: "Strong", match: Math.min(96, base + 3), skills: ["React", "TypeScript", "CSS"], type: "Hybrid · Full-time" },
+            { title: "Software Engineer", tag: "Great fit", match: Math.min(96, base), skills: ["JavaScript", "SQL", "Git"], type: "On-site · Full-time" },
+            { title: "Product Engineer", tag: "Good", match: Math.max(60, base - 4), skills: ["React", "Node.js", "AWS"], type: "Remote · Full-time" },
+          ];
+        }
+        if (!cancelled) setMatches(m);
+      } catch (_) {
+        if (!cancelled) setMatches([]);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  const badgeColor = { "Best match": "teal", Strong: "indigo", "Great fit": "violet", Good: "cyan" };
+
+  return (
+    <div style={{ padding: "28px 32px", maxWidth: 1000 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <div>
+          <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text, margin: 0 }}>Career Match</h1>
+          <p style={{ color: C.textMuted, fontSize: 14, margin: 0 }}>Roles that align with your skills and profile.</p>
+        </div>
+        <Btn variant="ghost" small onClick={() => nav("#score")}>View full score</Btn>
+      </div>
+
+      {loading ? (
+        <Card style={{ textAlign: "center", padding: "60px 40px" }}><p style={{ color: C.textMuted }}>Calculating matches…</p></Card>
+      ) : matches.length === 0 ? (
+        <Card style={{ textAlign: "center", padding: "60px 40px" }}>
+          <div style={{ fontSize: 48, marginBottom: 12 }}>🎯</div>
+          <h3 style={{ fontSize: 18, fontWeight: 700, color: C.text, marginBottom: 8 }}>No matches yet</h3>
+          <p style={{ fontSize: 13, color: C.textMuted, marginBottom: 18 }}>Complete your profile to get personalized role recommendations.</p>
+          <Btn onClick={() => nav("#profile-form")}>Build my profile</Btn>
+        </Card>
+      ) : (
+        <div style={{ display: "grid", gap: 14 }}>
+          {matches.map((m, i) => (
+            <Card key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <h3 style={{ fontSize: 16, fontWeight: 700, color: C.text }}>{m.title}</h3>
+                  <Badge color={badgeColor[m.tag] || "indigo"}>{m.tag}</Badge>
+                </div>
+                <div style={{ fontSize: 12.5, color: C.textMuted, marginTop: 4 }}>{m.type}</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
+                  {m.skills.map((s, j) => (
+                    <span key={j} style={{ background: C.indigo[50], color: C.indigo[400], padding: "4px 10px", borderRadius: 999, fontSize: 11, fontWeight: 600 }}>{s}</span>
+                  ))}
+                </div>
+              </div>
+              <div style={{ textAlign: "center" }}>
+                <div style={{ fontSize: 26, fontWeight: 800, color: C.teal[400] }}>{m.match}%</div>
+                <div style={{ fontSize: 11, color: C.textMuted }}>match</div>
+                <button onClick={() => alert(`You've been redirected to a draft application for the ${m.title} role (this is a demo).`)} style={{ marginTop: 10, padding: "8px 18px", borderRadius: 8, border: "none", background: `linear-gradient(135deg, ${C.indigo[600]}, ${C.violet[600]})`, color: "#fff", fontWeight: 700, fontSize: 12.5, cursor: "pointer" }}>Apply</button>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FeedbackPage({ nav }) {
+  const [feedback, setFeedback] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { api } = await import("./src/api/client");
+        const [scoreRes, docsRes] = await Promise.all([
+          api.get("/score"),
+          api.get("/generate/documents"),
+        ]);
+        if (cancelled) return;
+        const score = scoreRes?.score;
+        const docs = docsRes?.documents || [];
+        const b = score?.breakdown || {};
+        const tips = (score?.tips || []).map(t => ({ text: typeof t === "string" ? t : t, points: "tip" }));
+        const items = [
+          { icon: "📊", label: "Overall Score", value: score?.score ?? 0, note: b.keywordOptimization != null ? `Keyword optimization: ${b.keywordOptimization}/100` : null },
+          { icon: "📄", label: "Content Quality", value: b.contentQuality ?? 0, note: b.contentQuality != null ? (b.contentQuality >= 75 ? "Strong content" : "Add more detail and impact") : null },
+          { icon: "🚀", label: "Documents Generated", value: docs.length, note: docs.length === 0 ? "Generate your first document" : `${docs.length} assets ready` },
+        ];
+        setFeedback({ items, tips });
+      } catch (_) {
+        if (!cancelled) setFeedback(null);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  return (
+    <div style={{ padding: "28px 32px", maxWidth: 900 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <div>
+          <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text, margin: 0 }}>Feedback & Suggestions</h1>
+          <p style={{ color: C.textMuted, fontSize: 14, margin: 0 }}>Personalized insights to improve your professional profile.</p>
+        </div>
+        <Btn variant="ghost" small onClick={() => nav("#score")}>View score breakdown</Btn>
+      </div>
+
+      {loading ? (
+        <Card style={{ textAlign: "center", padding: "60px 40px" }}><p style={{ color: C.textMuted }}>Analyzing your profile…</p></Card>
+      ) : !feedback ? (
+        <Card style={{ textAlign: "center", padding: "60px 40px" }}>
+          <div style={{ fontSize: 48, marginBottom: 12 }}>⭐</div>
+          <h3 style={{ fontSize: 18, fontWeight: 700, color: C.text, marginBottom: 8 }}>Nothing to analyze yet</h3>
+          <p style={{ fontSize: 13, color: C.textMuted, marginBottom: 18 }}>Complete your profile and run a score to get feedback.</p>
+          <Btn onClick={() => nav("#profile-form")}>Complete my profile</Btn>
+        </Card>
+      ) : (
+        <>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 20 }}>
+            {feedback.items.map((it, i) => (
+              <Card key={i}>
+                <div style={{ fontSize: 26, marginBottom: 6 }}>{it.icon}</div>
+                <div style={{ fontSize: 32, fontWeight: 800, color: C.text }}>{it.value}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: C.textBody, marginTop: 2 }}>{it.label}</div>
+                {it.note && <div style={{ fontSize: 12, color: C.textMuted, marginTop: 4 }}>{it.note}</div>}
+              </Card>
+            ))}
+          </div>
+
+          <Card>
+            <h3 style={{ fontWeight: 700, fontSize: 16, color: C.text, marginBottom: 16 }}>💡 Suggestions to Improve</h3>
+            {Array.isArray(feedback.tips) && feedback.tips.length > 0 ? (
+              feedback.tips.map((t, i) => (
+                <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", padding: "10px 0", borderBottom: i < feedback.tips.length - 1 ? `1px solid ${C.border}` : "none" }}>
+                  <span style={{ color: C.indigo[400], fontWeight: 800 }}>→</span>
+                  <div style={{ flex: 1 }}>
+                    <span style={{ fontSize: 13.5, color: C.textBody, lineHeight: 1.5 }}>{typeof t.text === "string" ? t.text : JSON.stringify(t)}</span>
+                  </div>
+                  {t.points && <Badge color="teal">{t.points}</Badge>}
+                </div>
+              ))
+            ) : (
+              <p style={{ fontSize: 13, color: C.textMuted }}>Complete your profile to unlock personalized suggestions.</p>
+            )}
+          </Card>
+
+          <div style={{ marginTop: 18, display: "flex", justifyContent: "flex-end" }}>
+            <Btn onClick={() => nav("#profile-form")}>Apply improvements ✨</Btn>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PHASE 7c — Public Portfolio View
+// ═══════════════════════════════════════════════════════════════════════════
+
+function PublicPortfolioPage({ slug }) {
+  const [portfolio, setPortfolio] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      try {
+        const { api } = await import("./src/api/client");
+        const res = await api.get(`/portfolio/${encodeURIComponent(slug)}`);
+        if (cancelled) return;
+        setPortfolio(res?.portfolio || null);
+      } catch (e) {
+        if (!cancelled) setError(e.message || "Portfolio not found");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [slug]);
+
+  const renderSection = (s) => {
+    const c = s.content || {};
+    switch (s.type) {
+      case "hero":
+        return (
+          <div style={{ textAlign: "center", padding: "60px 20px 40px" }}>
+            <h1 style={{ fontSize: 34, fontWeight: 800, color: C.text, margin: 0 }}>{c.name || portfolio?.user?.name || "Hello, I'm"}</h1>
+            {c.tagline && <div style={{ fontSize: 18, fontWeight: 600, color: C.indigo[400], marginTop: 8 }}>{c.tagline}</div>}
+            {c.subtitle && <p style={{ fontSize: 15, color: C.textMuted, maxWidth: 560, margin: "14px auto 0" }}>{c.subtitle}</p>}
+          </div>
+        );
+      case "about":
+        return (
+          <div style={{ maxWidth: 640, margin: "0 auto" }}>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 12 }}>{s.title || "About Me"}</h2>
+            {c.intro && <p style={{ fontSize: 14, color: C.textBody, lineHeight: 1.7 }}>{c.intro}</p>}
+            {(c.highlights || []).length > 0 && (
+              <ul style={{ fontSize: 14, color: C.textBody, lineHeight: 1.7, marginTop: 12 }}>
+                {c.highlights.map((h, i) => <li key={i}>{h}</li>)}
+              </ul>
+            )}
+          </div>
+        );
+      case "skills":
+        return (
+          <div style={{ maxWidth: 640, margin: "0 auto" }}>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 12 }}>{s.title || "Skills"}</h2>
+            <p style={{ fontSize: 13, color: C.textMuted }}>Skills configured in the builder.</p>
+          </div>
+        );
+      case "projects":
+        return (
+          <div style={{ maxWidth: 640, margin: "0 auto" }}>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 12 }}>{s.title || "Projects"}</h2>
+            <p style={{ fontSize: 13, color: C.textMuted }}>Projects configured in the builder.</p>
+          </div>
+        );
+      case "contact":
+        return (
+          <div style={{ maxWidth: 640, margin: "0 auto" }}>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 8 }}>{c.heading || s.title || "Get In Touch"}</h2>
+            {c.message && <p style={{ fontSize: 14, color: C.textBody, lineHeight: 1.7 }}>{c.message}</p>}
+            {portfolio?.user?.email && (
+              <div style={{ marginTop: 12 }}>
+                <a href={`mailto:${portfolio.user.email}`} style={{ color: C.indigo[400], fontSize: 14, fontWeight: 600 }}>{portfolio.user.email}</a>
+              </div>
+            )}
+          </div>
+        );
+      default:
+        return (
+          <div style={{ maxWidth: 640, margin: "0 auto" }}>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 12 }}>{s.title || "Section"}</h2>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div style={{ minHeight: "100vh", background: C.bg, color: C.text }}>
+      <style>{`* { box-sizing: border-box; } body { margin: 0; background: #0F172A; color: #F8FAFC; }`}</style>
+      <div style={{ maxWidth: 820, margin: "0 auto", padding: "24px 24px 60px" }}>
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16 }}>
+          <a href="#home" style={{ fontSize: 13, color: C.textMuted, textDecoration: "none" }}>CareersCraft Home →</a>
+        </div>
+
+        {loading && <div style={{ textAlign: "center", padding: 80, color: C.textMuted }}>Loading portfolio…</div>}
+
+        {!loading && error && (
+          <div style={{ textAlign: "center", padding: 80 }}>
+            <div style={{ fontSize: 48, marginBottom: 12 }}>🔒</div>
+            <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text, marginBottom: 8 }}>Portfolio not found</h2>
+            <p style={{ fontSize: 14, color: C.textMuted }}>{error}</p>
+            <a href="#home" style={{ display: "inline-block", marginTop: 16, padding: "11px 24px", borderRadius: 10, background: `linear-gradient(135deg, ${C.indigo[600]}, ${C.violet[600]})`, color: "#fff", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>Back to Home</a>
+          </div>
+        )}
+
+        {!loading && !error && portfolio && (
+          <>
+            <div style={{ background: C.surface, borderRadius: 16, border: `1px solid ${C.border}`, padding: "20px 28px", marginBottom: 24 }}>
+              {portfolio.sections
+                .filter((s) => s.visible !== false)
+                .sort((a, b) => a.order - b.order)
+                .map((s) => renderSection(s))}
+              <div style={{ textAlign: "center", fontSize: 12, color: C.textMuted, paddingTop: 20, marginTop: 20, borderTop: `1px solid ${C.border}` }}>
+                Built with CareersCraft · {portfolio.viewCount ?? 0} views
+              </div>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -3156,18 +3601,6 @@ function DashboardLayout({ children, nav, route }) {
   );
 }
 
-// ─── Placeholder page ────────────────────────────────────────────────────────
-function PlaceholderPage({ title, desc, icon, phase }) {
-  return (
-    <div style={{ padding: "40px 36px", textAlign: "center", maxWidth: 600, margin: "0 auto" }}>
-      <div style={{ fontSize: 56, marginBottom: 16 }}>{icon}</div>
-      <h2 style={{ fontSize: 24, fontWeight: 800, color: C.text, marginBottom: 10 }}>{title}</h2>
-      <p style={{ fontSize: 15, color: C.textMuted, marginBottom: 24 }}>{desc}</p>
-      <Badge color="amber">{phase}</Badge>
-    </div>
-  );
-}
-
 function LegalPage({ kind }) {
   const isPrivacy = kind === "privacy";
   const title = isPrivacy ? "Privacy Policy" : "Terms of Service";
@@ -3264,7 +3697,6 @@ export default function App() {
     let cancelled = false;
     (async () => {
       const { supabase, isSupabaseConfigured } = await import("./src/api/supabase");
-      const { authApi } = await import("./src/api/auth");
       if (!isSupabaseConfigured() || !supabase) return;
 
       /**** OAuth / magic-link callback ****/
@@ -3275,7 +3707,7 @@ export default function App() {
         try {
           await supabase.auth.getSession();
           // Supabase sanitises the URL fragment after processing the session.
-        } catch (_) {}
+        } catch (_) { /* ignore */ }
       }
 
       const { data } = await supabase.auth.getUser();
@@ -3302,6 +3734,12 @@ export default function App() {
 
   const isDash = ["#dashboard","#portfolio","#resume","#linkedin","#github-readme","#cover-letter","#score","#recruiter-sim","#ai-assistant","#profile-form","#settings","#documents","#career-match","#feedback"].includes(route);
 
+  const publicMatch = route && route.startsWith("#portfolio/");
+  if (publicMatch) {
+    const slug = route.replace("#portfolio/", "").split(/[?#]/)[0];
+    return <PublicPortfolioPage slug={slug}/>;
+  }
+
   if (isDash) {
     return (
       <DashboardLayout nav={nav} route={route}>
@@ -3316,9 +3754,9 @@ export default function App() {
         {route === "#score"         && <PortfolioScorePage nav={nav}/>}
         {route === "#recruiter-sim" && <RecruiterSimulationPage nav={nav}/>}
         {route === "#settings"      && <SettingsPage nav={nav}/>}
-        {route === "#documents"     && <PlaceholderPage title="Documents" icon="📄" desc="All your generated professional documents in one place." phase="Coming soon"/>}
-        {route === "#career-match"  && <PlaceholderPage title="Career Match" icon="🎯" desc="Find roles that match your skills and profile." phase="Coming soon"/>}
-        {route === "#feedback"      && <PlaceholderPage title="Feedback" icon="⭐" desc="AI feedback and personalized suggestions to improve your profile." phase="Coming soon"/>}
+        {route === "#documents"     && <DocumentsHubPage nav={nav}/>}
+        {route === "#career-match"  && <CareerMatchPage nav={nav}/>}
+        {route === "#feedback"      && <FeedbackPage nav={nav}/>}
       </DashboardLayout>
     );
   }

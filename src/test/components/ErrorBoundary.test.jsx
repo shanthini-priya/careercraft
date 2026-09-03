@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import ErrorBoundary from '../../components/ErrorBoundary';
 
 function ThrowingComponent() {
@@ -42,8 +42,7 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
 
-    const toggleBtn = screen.getByText('▸ Show error details');
-    toggleBtn.click();
+    fireEvent.click(screen.getByText('▸ Show error details'));
 
     expect(screen.getByText(/Test error/)).toBeTruthy();
     spy.mockRestore();
@@ -58,9 +57,8 @@ describe('ErrorBoundary', () => {
       </ErrorBoundary>
     );
 
-    const toggleBtn = screen.getByText('▸ Show error details');
-    toggleBtn.click();
-    toggleBtn.click();
+    fireEvent.click(screen.getByText('▸ Show error details'));
+    fireEvent.click(screen.getByText('▾ Hide error details'));
 
     expect(screen.queryByText(/Test error/)).toBeNull();
     spy.mockRestore();

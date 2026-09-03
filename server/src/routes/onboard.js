@@ -85,7 +85,7 @@ const persistProfile = async (userId, data) => {
   if (Array.isArray(data.skills) && data.skills.length) {
     await prisma.skill.deleteMany({ where: { profileId: profile.id } });
     await prisma.skill.createMany({
-      data: data.skills.map((s, i) => ({
+      data: data.skills.map((s) => ({
         profileId: profile.id,
         name: s.name,
         category: s.category || "General",
@@ -203,7 +203,7 @@ router.post("/converse", validate(converseValidation), async (req, res, next) =>
           const parsed = JSON.parse(errText);
           const msg = parsed?.error?.message;
           if (msg) friendly = `Gemini: ${msg}`;
-        } catch (_) {}
+        } catch (_) { /* ignore malformed error body */ }
         return res.status(502).json({ error: "AI request failed", message: friendly });
       }
 

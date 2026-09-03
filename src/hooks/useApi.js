@@ -45,6 +45,9 @@ export default function useApi(url, options = {}) {
     } finally {
       setLoading(false);
     }
+    // Deliberately depend on the scalar options only; depending on the whole
+    // `options` object identity would refetch on every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, options.method, options.body]);
 
   useEffect(() => {

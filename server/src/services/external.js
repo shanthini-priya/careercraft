@@ -9,7 +9,7 @@
 
 // ─── Email (transactional) ────────────────────────────────────────────────
 // Providers: Resend / SendGrid / Nodemailer. Add RESEND_API_KEY to .env.
-export async function sendEmail({ to, subject, html, text }) {
+export async function sendEmail({ to, subject, _html, _text }) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.log(`[email:stub] to=${to} subject="${subject}"`);
@@ -35,7 +35,7 @@ export async function sendWelcomeEmail(user) {
 
 // ─── Payments ─────────────────────────────────────────────────────────────
 // Provider: Razorpay (India) or Stripe. Add RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET.
-export async function createPaymentOrder({ amount, currency = "INR", receipt }) {
+export async function createPaymentOrder({ amount, currency = "INR", _receipt }) {
   const keyId = process.env.RAZORPAY_KEY_ID;
   const keySecret = process.env.RAZORPAY_KEY_SECRET;
   if (!keyId || !keySecret) {
@@ -53,7 +53,7 @@ export async function createPaymentOrder({ amount, currency = "INR", receipt }) 
 
 // ─── File storage ────────────────────────────────────────────────────────
 // Provider: Cloudinary / AWS S3 / Supabase Storage. Add CLOUDINARY_URL.
-export async function uploadFile(buffer, { folder = "careercraft" }) {
+export async function uploadFile(buffer, { _folder = "careercraft" }) {
   const cloudinaryUrl = process.env.CLOUDINARY_URL;
   if (!cloudinaryUrl) {
     return { stub: true, url: null, publicId: null };
