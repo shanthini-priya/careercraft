@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --token-bg: #f8fafc;
+  --token-card: #ffffff;
+  --token-card-hover: #f1f5f9;
+  --token-border: #e2e8f0;
+  --token-text: #0f172a;
+  --token-muted: #64748b;
+  --token-accent: #4f46e5;
+  --token-accent-hover: #4338ca;
+  --token-accent-soft: rgba(79, 70, 229, 0.12);
+  --color-primary: #4f46e5;
+}
+
+.light {
+  --token-bg: #f8fafc;
+  --token-card: #ffffff;
+  --token-card-hover: #f1f5f9;
+  --token-border: #e2e8f0;
+  --token-text: #0f172a;
+  --token-muted: #64748b;
+}
+
+.dark {
+  --token-bg: #0a0b0e;
+  --token-card: #11141d;
+  --token-card-hover: #181d2a;
+  --token-border: rgba(255, 255, 255, 0.08);
+  --token-text: #f8fafc;
+  --token-muted: #94a3b8;
+  --token-accent: #06b6d4;
+  --token-accent-hover: #22d3ee;
+  --token-accent-soft: rgba(6, 182, 212, 0.22);
+  --color-primary: #06b6d4;
+}
+
+/* Color theme token presets */
+[data-theme="indigo"] {
+  --token-accent: #4f46e5;
+  --token-accent-hover: #4338ca;
+  --token-accent-soft: rgba(79, 70, 229, 0.12);
+  --color-primary: #4f46e5;
+}
+.dark[data-theme="indigo"], .dark [data-theme="indigo"], [data-theme="indigo"].dark, [data-theme="indigo"] .dark {
+  --token-accent: #6366f1;
+  --token-accent-hover: #818cf8;
+  --token-accent-soft: rgba(99, 102, 241, 0.2);
+  --color-primary: #6366f1;
+}
+
+[data-theme="emerald"] {
+  --token-accent: #059669;
+  --token-accent-hover: #047857;
+  --token-accent-soft: rgba(5, 150, 105, 0.12);
+  --color-primary: #059669;
+}
+.dark[data-theme="emerald"], .dark [data-theme="emerald"], [data-theme="emerald"].dark, [data-theme="emerald"] .dark {
+  --token-accent: #10b981;
+  --token-accent-hover: #059669;
+  --token-accent-soft: rgba(16, 185, 129, 0.2);
+  --color-primary: #10b981;
+}
+
+[data-theme="violet"] {
+  --token-accent: #7c3aed;
+  --token-accent-hover: #6d28d9;
+  --token-accent-soft: rgba(124, 58, 237, 0.12);
+  --color-primary: #7c3aed;
+}
+.dark[data-theme="violet"], .dark [data-theme="violet"], [data-theme="violet"].dark, [data-theme="violet"] .dark {
+  --token-accent: #8b5cf6;
+  --token-accent-hover: #7c3aed;
+  --token-accent-soft: rgba(139, 92, 246, 0.2);
+  --color-primary: #8b5cf6;
+}
+
+[data-theme="cyan"], [data-theme="teal"] {
+  --token-accent: #0891b2;
+  --token-accent-hover: #0e7490;
+  --token-accent-soft: rgba(8, 145, 178, 0.12);
+  --color-primary: #0891b2;
+}
+.dark[data-theme="cyan"], .dark [data-theme="cyan"], [data-theme="cyan"].dark, [data-theme="cyan"] .dark,
+.dark[data-theme="teal"], .dark [data-theme="teal"], [data-theme="teal"].dark, [data-theme="teal"] .dark {
+  --token-accent: #06b6d4;
+  --token-accent-hover: #0891b2;
+  --token-accent-soft: rgba(6, 182, 212, 0.2);
+  --color-primary: #06b6d4;
+}
+
+[data-theme="amber"] {
+  --token-accent: #d97706;
+  --token-accent-hover: #b45309;
+  --token-accent-soft: rgba(217, 119, 6, 0.12);
+  --color-primary: #d97706;
+}
+.dark[data-theme="amber"], .dark [data-theme="amber"], [data-theme="amber"].dark, [data-theme="amber"] .dark {
+  --token-accent: #f59e0b;
+  --token-accent-hover: #d97706;
+  --token-accent-soft: rgba(245, 158, 11, 0.2);
+  --color-primary: #f59e0b;
+}
+
+[data-theme="rose"] {
+  --token-accent: #e11d48;
+  --token-accent-hover: #be123c;
+  --token-accent-soft: rgba(225, 29, 72, 0.12);
+  --color-primary: #e11d48;
+}
+.dark[data-theme="rose"], .dark [data-theme="rose"], [data-theme="rose"].dark, [data-theme="rose"] .dark {
+  --token-accent: #f43f5e;
+  --token-accent-hover: #e11d48;
+  --token-accent-soft: rgba(244, 63, 94, 0.2);
+  --color-primary: #f43f5e;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  color: var(--token-text);
+  background-color: var(--token-bg);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ATS Resume & Print Optimizations */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .ats-resume-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  @page {
+    margin: 12mm 15mm;
+    size: A4 portrait;
+  }
+}
